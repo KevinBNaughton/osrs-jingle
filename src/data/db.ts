@@ -136,40 +136,65 @@ export async function getStatistics(): Promise<Statistics> {
   // }
 }
 
-export async function incrementGlobalGuessCounter(): Promise<void> {
-  console.warn("TODO - implement a global guess counter");
-  // const response = await fetch(`${API_URL}/statistics/increment`, {
-  //   method: "POST",
-  // });
-  // if (response.ok) {
-  //   console.log("Global guess counter incremented");
-  // } else {
-  //   console.error("Failed to increment global guess counter");
-  // }
+async function incrementGlobalGuessCounter(success: boolean): Promise<void> {
+  if (success) {
+    prisma.guessCount.upsert({
+      create: {
+        song: "OSRS_GLOBAL",
+        success: 1,
+      },
+      update: {
+        success: { increment: 1 },
+      },
+      where: { song: "OSRS_GLOBAL" },
+    });
+    console.info("Global success counter incremented.");
+    return;
+  }
+  prisma.guessCount.upsert({
+    create: {
+      song: "OSRS_GLOBAL",
+      failure: 1,
+    },
+    update: {
+      failure: { increment: 1 },
+    },
+    where: { song: "OSRS_GLOBAL" },
+  });
+  console.info("Global failure counter incremented.");
 }
 
-export async function incrementSongSuccessCount(
-  _songName: string,
-): Promise<void> {
-  console.warn("Implement a song success count");
-  // const response = await fetch(`${API_URL}/songs/${songName}/success`, {
-  //   method: "POST",
-  // });
-  // if (response.ok) {
-  //   console.log(`${songName} success count incremented`);
-  // } else {
-  //   console.error("Failed to increment song success count");
-  // }
+async function incrementSongSuccessCount(songName: string): Promise<void> {
+  await prisma.guessCount.upsert({
+    create: {
+      song: songName,
+      success: 1,
+    },
+    update: {
+      success: { increment: 1 },
+    },
+    where: { song: songName },
+  });
 }
 
-export async function incrementSongFailureCount(_songName: string) {
-  console.warn("Implement a song failure count");
-  // const response = await fetch(`${API_URL}/songs/${songName}/success`, {
-  //   method: "POST",
-  // });
-  // if (response.ok) {
-  //   console.log(`${songName} success count incremented`);
-  // } else {
-  //   console.error("Failed to increment song success count");
-  // }
+async function incrementSongFailureCount(songName: string): Promise<void> {
+  await prisma.guessCount.upsert({
+    create: {
+      song: songName,
+      failure: 1,
+    },
+    update: {
+      failure: { increment: 1 },
+    },
+    where: { song: songName },
+  });
+}
+
+export async function incrementSongCount(songName: string, success: boolean) {
+  if (success) {
+    incrementSongSuccessCount(songName);
+  } else {
+    incrementSongFailureCount(songName);
+  }
+  incrementGlobalGuessCounter(success);
 }

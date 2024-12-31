@@ -15,9 +15,7 @@ import { GeoJSON, Marker, useMapEvents } from "react-leaflet";
 import geojsondata, { GeoJSONFeature } from "@/data/GeoJSON";
 import {
   getDailyChallengePercentileAndIncrement,
-  incrementGlobalGuessCounter,
-  incrementSongFailureCount,
-  incrementSongSuccessCount,
+  incrementSongCount,
 } from "@/data/db";
 import { calculateTimeDifference } from "@/utils/calculateTimeDifference";
 import {
@@ -89,7 +87,6 @@ export default function MapClickHandler({
       if (resultVisible || !startedGame) {
         return;
       }
-      incrementGlobalGuessCounter();
       setPosition(e.latlng);
 
       zoom = map.getMaxZoom();
@@ -124,11 +121,11 @@ export default function MapClickHandler({
         guessResultAction(1000);
         resultsArrayTemp[dailyChallengeIndex] = 1000;
         resultsArrayAction(resultsArrayTemp);
-        incrementSongSuccessCount(currentSong);
+        incrementSongCount(currentSong, true);
         resultVisibleAction(true);
         localStorage.setItem("dailyResults", JSON.stringify(resultsArray));
       } else {
-        incrementSongFailureCount(currentSong);
+        incrementSongCount(currentSong, false);
         const distanceToPolygon = Math.min(
           ...correctFeature.geometry.coordinates.map((polygon) =>
             getDistanceToPolygon(
