@@ -4,6 +4,7 @@ import songs from "@/data/songs.json";
 import { PrismaClient, User } from "@prisma/client";
 import { isFeatureVisibleOnMap } from "@/utils/getSong";
 import { decodeHTML } from "@/utils/string-utils";
+import { getCurrentUTCDate } from "@/utils/date";
 
 // Set in top level .env file
 // Likely set to: "http://127.0.0.1:PORT/"
@@ -66,86 +67,39 @@ export async function getSong(_songName: string): Promise<Song> {
   // }
 }
 
-export async function generateDailyChallenge(_date: Date) {
+async function generateDailyChallenge(date: Date) {
   console.warn("TODO - Implement this");
-  // const response = await fetch(`${API_URL}/api/daily-challenge`, {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify({ date }),
-  // });
-  // if (response.ok) {
-  //   console.log(`Daily challenge successfully generated for ${date}`);
-  // } else {
-  //   console.error("Failed to generate daily challenge");
-  // }
+  let dailySongsSet: Set<string> = new Set<string>();
+  while (dailySongsSet.size < 5) {
+    dailySongsSet.add(getRandomSong(dailySongsSet));
+  }
+  const dailyChallenge = await prisma.dailyChallenge.create({
+    data: {
+      date: date,
+      songs: Array.from(dailySongsSet),
+      submissions: 0,
+    },
+  });
+  return dailyChallenge;
 }
 
 export async function getDailyChallenge(
   _formattedDate: string,
 ): Promise<DailyChallenge> {
   console.warn("TODO - Implement this correctly and not randomly");
-  let d: DailyChallenge = {
-    songs: [],
-    date: new Date(),
+  const today = getCurrentUTCDate();
+  let dailyChallenge = await prisma.dailyChallenge.findUnique({
+    where: { date: today },
+  });
+  if (!dailyChallenge) {
+    dailyChallenge = await generateDailyChallenge(today);
+  }
+  return {
+    songs: dailyChallenge.songs,
+    date: dailyChallenge.date,
     results: [],
+    submissions: dailyChallenge.submissions ?? undefined,
   };
-  for (let i = 0; i < 5; i++) {
-    d.songs.push(getRandomSong());
-  }
-  return d;
-  // const response = await fetch(
-  //   `${API_URL}/api/daily-challenges/${formattedDate}`,
-  // );
-  // if (response.ok) {
-  //   return response.json();
-  // } else {
-  //   console.error("Failed to fetch daily challenge");
-  //   return null;
-  // }
-}
-
-export async function getWeekStats() {
-  const weekDatesFormatted = [
-    "2024-05-27",
-    "2024-05-28",
-    "2024-05-29",
-    "2024-05-30",
-    "2024-05-31",
-    "2024-06-01",
-    "2024-06-02",
-  ];
-  const weekStats = [];
-
-  for (const date of weekDatesFormatted) {
-    const dailyChallenge = await getDailyChallenge(date);
-    const results: number[] = dailyChallenge?.results ?? [];
-    const average = results.reduce((a, b) => a + b, 0) / results.length;
-
-    const songSuccessRates: Map<string, number> = new Map();
-    for (const songName of dailyChallenge.songs) {
-      const song = await getSong(songName);
-      let rate = 100;
-      if (song.success_count && song.failure_count) {
-        rate =
-          (song.success_count / (song.success_count + song.failure_count)) *
-          100;
-      } else if (song.failure_count) {
-        rate = 0;
-      }
-      songSuccessRates.set(song.name, rate);
-    }
-
-    weekStats.push({
-      date: date,
-      submissions: dailyChallenge.submissions,
-      average: average,
-      songSuccessRates,
-    });
-  }
-
-  return weekStats;
 }
 
 export async function getDailyChallengePercentileAndIncrement(

@@ -21,8 +21,7 @@ model User {
 }
 
 model DailyChallenge {
-  id          Int       @id @default(autoincrement())
-  date        DateTime  @default(now())
+  date        DateTime  @id @unique
   songs       String[]
   submissions Int?
 }
