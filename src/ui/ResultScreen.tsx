@@ -57,8 +57,7 @@ export default function ResultScreen({
               Copy Results
             </div>
           )}
-
-          <a href="/" className="result-screen-option">
+          <a href="/game" className="result-screen-option">
             Back to Home
           </a>
         </div>
