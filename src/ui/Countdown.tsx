@@ -2,12 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import "@/style/resultScreen.css";
-import getCurrentDateInBritain from "@/utils/getCurrentDateinBritain";
+import { formatDateToString, getCurrentUTCDate } from "@/utils/date";
 
 export default function Countdown() {
   const [countdown, setCountdown] = useState("");
   const dailyCompleted =
-    global?.localStorage?.dailyComplete === getCurrentDateInBritain();
+    global?.localStorage?.dailyComplete ===
+    formatDateToString(getCurrentUTCDate());
 
   useEffect(() => {
     const calculateTimeLeft = () => {

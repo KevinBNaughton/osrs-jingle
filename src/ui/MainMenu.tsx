@@ -6,7 +6,7 @@ import { mediaHostUrl } from "@/data/hostUrl";
 import { getStatistics } from "@/data/db";
 import "@/style/footer.css";
 import "@/style/mainMenu.css";
-import getCurrentDateInBritain from "@/utils/getCurrentDateinBritain";
+import { getCurrentUTCDate, formatDateToString } from "@/utils/date";
 import Countdown from "@/ui/Countdown";
 import { DailyChallenge } from "@/data/definitions";
 
@@ -69,7 +69,8 @@ export default function MainMenu({
         style={{ left: "17vw", top: "70%" }}
         onClick={() => {
           if (
-            global?.localStorage?.dailyComplete === getCurrentDateInBritain()
+            global?.localStorage?.dailyComplete ===
+            formatDateToString(getCurrentUTCDate())
           ) {
             dailyCompleteAction(true);
             resultsArrayAction(JSON.parse(localStorage.dailyResults));

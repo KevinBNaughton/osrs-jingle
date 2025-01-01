@@ -26,7 +26,7 @@ import {
 } from "@/utils/clickHandler-utils";
 import { featureMatchesSong } from "@/utils/geojson-utils";
 import { toOurPixelCoordinates } from "@/utils/coordinate-utils";
-import getCurrentDateInBritain from "@/utils/getCurrentDateinBritain";
+import { formatDateToString, getCurrentUTCDate } from "@/utils/date";
 
 export default function MapClickHandler({
   correctPolygonAction,
@@ -143,12 +143,12 @@ export default function MapClickHandler({
       if (resultsArray.length > 4) {
         timeTakenAction(calculateTimeDifference(startTime, new Date()));
         setTimeout(() => dailyCompleteAction(true), 1500);
+        const utc_today: string = formatDateToString(getCurrentUTCDate());
         if (
           localStorage?.dailyComplete === undefined ||
-          localStorage?.dailyComplete !== getCurrentDateInBritain()
+          localStorage?.dailyComplete !== utc_today
         ) {
-          const dailyComplete = getCurrentDateInBritain();
-          localStorage.setItem("dailyComplete", dailyComplete);
+          localStorage.setItem("dailyComplete", utc_today);
           localStorage.setItem(
             "dailyTimeTaken",
             calculateTimeDifference(startTime, new Date()).toString(),
