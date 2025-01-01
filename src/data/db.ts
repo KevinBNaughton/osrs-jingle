@@ -124,7 +124,6 @@ async function incrementGlobalCounter(success: boolean): Promise<void> {
     },
     where: { song: "OSRS_GLOBAL" },
   });
-  console.info("Global failure counter incremented.");
 }
 
 async function incrementSongSuccessCount(songName: string): Promise<void> {
