@@ -17,7 +17,7 @@ import {
   getDailyChallengePercentileAndIncrement,
   incrementSongCount,
 } from "@/data/db";
-import { calculateTimeDifference } from "@/utils/calculateTimeDifference";
+import { calculateTimeDifference } from "@/utils/time";
 import {
   calculateDistance,
   closePolygon,

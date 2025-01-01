@@ -1,3 +1,5 @@
+import { formatMilliseconds } from "@/utils/time";
+
 export function copyResultsToClipboard(
   resultsArray: number[],
   time_taken?: number,
@@ -16,7 +18,7 @@ export function copyResultsToClipboard(
 
   if (percentile && time_taken) {
     navigator.clipboard.writeText(
-      `I scored ${sum} on today's Jingle challenge! I finished in ${time_taken} and placed in the top ${percentile}%, can you beat me? https://osrs-jingle.kevinbnaughton.com\n\n` +
+      `I scored ${sum} on today's Jingle challenge! I finished in ${formatMilliseconds(time_taken)} and placed in the top ${percentile}%, can you beat me? https://osrs-jingle.kevinbnaughton.com\n\n` +
         resultsString,
     );
   } else {

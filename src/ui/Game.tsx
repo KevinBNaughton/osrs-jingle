@@ -7,7 +7,7 @@ import ResultScreen from "@/ui/ResultScreen";
 import UiBox from "@/ui/UiBox";
 import { songHostUrl } from "@/data/hostUrl";
 import "@/style/leaflet.css";
-import { calculateTimeDifference } from "@/utils/calculateTimeDifference";
+import { calculateTimeDifference } from "@/utils/time";
 import getJingleNumber from "@/utils/getJingleNumber";
 import { getRandomSong } from "@/utils/getRandomSong";
 import { DailyChallenge } from "@/data/definitions";

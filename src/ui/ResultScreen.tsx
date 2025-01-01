@@ -5,6 +5,7 @@ import "@/style/resultScreen.css";
 import { copyResultsToClipboard } from "@/utils/copyResultsToClipboard";
 import { isMobile } from "@/utils/isMobile";
 import Countdown from "@/ui/Countdown";
+import { formatMilliseconds } from "@/utils/time";
 
 export default function ResultScreen({
   resultsArray,
@@ -28,7 +29,7 @@ export default function ResultScreen({
         </div>
         <div className="result-screen-data-row">
           <div>Time</div>
-          <div>{timeTaken} TODO convert to a string</div>
+          <div>{formatMilliseconds(timeTaken)}</div>
         </div>
         <div className="result-screen-data-row">
           <div>Top%</div>
