@@ -148,7 +148,7 @@ export default function Game({
                 ? timeTaken
                 : calculateTimeDifference(startTime, new Date())
             }
-            jingleNumber={getJingleNumber(dailyChallenge)}
+            jingleNumber={getJingleNumber(dailyChallenge.date)}
             dailyChallengeDate={dailyChallenge.date}
           />
         )}

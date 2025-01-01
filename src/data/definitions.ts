@@ -1,5 +1,16 @@
 import songs from "@/data/songs.json";
 
+// Set in .env file: "2025", "0", and "1" for year, month, and day respectfully
+export const JINGLE_START_DATE: Date = new Date(
+  +(process.env.JINGLE_START_YEAR || "2025"),
+  +(process.env.JINGLE_START_MONTH || "0"),
+  +(process.env.JINGLE_START_DAY || "1"),
+  0,
+  0,
+  0,
+  0,
+);
+
 export const songNamesArray = Object.keys(songs);
 
 export type User = {
