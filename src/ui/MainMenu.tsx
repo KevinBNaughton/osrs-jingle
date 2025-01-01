@@ -84,9 +84,6 @@ export default function MainMenu({
             currentSongAction(dailyChallenge.songs[0]);
             playSongAction(dailyChallenge.songs[0]);
             dailyModeAction(true);
-            console.debug("SET CURRENT SONG ACTION: ", currentSong);
-            console.debug("dailyChallenge songs: ", dailyChallenge.songs);
-            console.debug("dailyChallenge: ", dailyChallenge);
           }
         }}
       >

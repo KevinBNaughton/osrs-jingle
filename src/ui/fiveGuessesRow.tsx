@@ -2,7 +2,6 @@ import React from "react";
 import DailyGuessLabel from "@/ui/DailyGuessLabel";
 
 export default function FiveGuessesRow(dailyResults: number[]) {
-  console.debug(dailyResults);
   return (
     <table
       style={{
