@@ -1,17 +1,11 @@
-import { DailyChallenge, Song, Statistics } from "@/data/definitions";
-import geojsondata, { GeoJSONFeature } from "@/data/GeoJSON";
-import songs from "@/data/songs.json";
-import { PrismaClient, User } from "@prisma/client";
-import { isFeatureVisibleOnMap } from "@/utils/getSong";
-import { decodeHTML } from "@/utils/string-utils";
+"use server";
+
+import { DailyChallenge, Statistics } from "@/data/definitions";
+import { PrismaClient, User, Song } from "@prisma/client";
 import { getCurrentUTCDate } from "@/utils/date";
+import { getRandomSong } from "@/utils/getRandomSong";
 
-// Set in top level .env file
-// Likely set to: "http://127.0.0.1:PORT/"
-export const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
-export const songNamesArray = Object.keys(songs);
-
-export const prisma: PrismaClient = new PrismaClient();
+const prisma: PrismaClient = new PrismaClient();
 
 if (typeof window === "undefined") {
   // if (!global.prisma) {
@@ -26,52 +20,26 @@ export async function getUser(email: string): Promise<User | null> {
   return user;
 }
 
-function getRandomSong(playedSongs: Set<string> = new Set([])): string {
-  let isValidSong = false;
-  const visibleFeatures = geojsondata.features.filter(isFeatureVisibleOnMap);
-  while (!isValidSong) {
-    const randomFeature: GeoJSONFeature = visibleFeatures.sort(
-      () => Math.random() - Math.random(),
-    )[0];
-    let match = randomFeature.properties.title.match(/>(.*?)</);
-    if (match) {
-      const randomSongName = decodeHTML(match[1]);
-      if (playedSongs.has(randomSongName)) {
-        continue;
-      }
-      return decodeHTML(match[1]);
-    } else {
-      console.error(
-        "Feature: ",
-        randomFeature.properties.title,
-        " in GeoJSON misconfigured!",
-      );
-    }
+export async function getSong(songName: string): Promise<Song> {
+  const song: Song | null = await prisma.song.findUnique({
+    where: {
+      song: songName,
+    },
+  });
+  if (song) {
+    return song;
   }
-  console.warn("Using backup songNamesArray...");
-  return songNamesArray[Math.floor(Math.random() * songNamesArray.length)];
-}
-
-export async function getSong(_songName: string): Promise<Song> {
-  console.warn("TODO - Implement this");
-  return {
-    name: "Background",
-    success_count: 1,
-    failure_count: 1,
-  };
-  // const response = await fetch(`${API_URL}/api/songs/${songName}`);
-  // if (response.ok) {
-  //   return response.json();
-  // } else {
-  //   return null; // Handle the error as needed
-  // }
+  return await prisma.song.create({
+    data: {
+      song: songName,
+    },
+  });
 }
 
 async function generateDailyChallenge(date: Date) {
-  console.warn("TODO - Implement this");
   let dailySongsSet: Set<string> = new Set<string>();
   while (dailySongsSet.size < 5) {
-    dailySongsSet.add(getRandomSong(dailySongsSet));
+    getRandomSong(dailySongsSet);
   }
   const dailyChallenge = await prisma.dailyChallenge.create({
     data: {
@@ -86,7 +54,6 @@ async function generateDailyChallenge(date: Date) {
 export async function getDailyChallenge(
   _formattedDate: string,
 ): Promise<DailyChallenge> {
-  console.warn("TODO - Implement this correctly and not randomly");
   const today = getCurrentUTCDate();
   let dailyChallenge = await prisma.dailyChallenge.findUnique({
     where: { date: today },
@@ -136,28 +103,28 @@ export async function getStatistics(): Promise<Statistics> {
   // }
 }
 
-async function incrementGlobalGuessCounter(success: boolean): Promise<void> {
+async function incrementGlobalCounter(success: boolean): Promise<void> {
   if (success) {
-    prisma.guessCount.upsert({
+    prisma.song.upsert({
       create: {
         song: "OSRS_GLOBAL",
-        success: 1,
+        success_count: 1,
       },
       update: {
-        success: { increment: 1 },
+        success_count: { increment: 1 },
       },
       where: { song: "OSRS_GLOBAL" },
     });
     console.info("Global success counter incremented.");
     return;
   }
-  prisma.guessCount.upsert({
+  prisma.song.upsert({
     create: {
       song: "OSRS_GLOBAL",
-      failure: 1,
+      failure_count: 1,
     },
     update: {
-      failure: { increment: 1 },
+      failure_count: { increment: 1 },
     },
     where: { song: "OSRS_GLOBAL" },
   });
@@ -165,26 +132,26 @@ async function incrementGlobalGuessCounter(success: boolean): Promise<void> {
 }
 
 async function incrementSongSuccessCount(songName: string): Promise<void> {
-  await prisma.guessCount.upsert({
+  await prisma.song.upsert({
     create: {
       song: songName,
-      success: 1,
+      success_count: 1,
     },
     update: {
-      success: { increment: 1 },
+      success_count: { increment: 1 },
     },
     where: { song: songName },
   });
 }
 
 async function incrementSongFailureCount(songName: string): Promise<void> {
-  await prisma.guessCount.upsert({
+  await prisma.song.upsert({
     create: {
       song: songName,
-      failure: 1,
+      failure_count: 1,
     },
     update: {
-      failure: { increment: 1 },
+      failure_count: { increment: 1 },
     },
     where: { song: songName },
   });
@@ -196,5 +163,5 @@ export async function incrementSongCount(songName: string, success: boolean) {
   } else {
     incrementSongFailureCount(songName);
   }
-  incrementGlobalGuessCounter(success);
+  incrementGlobalCounter(success);
 }

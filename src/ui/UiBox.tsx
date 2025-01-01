@@ -2,7 +2,7 @@ import React, { Dispatch, RefObject, SetStateAction } from "react";
 import { mediaHostUrl } from "@/data/hostUrl";
 import "@/style/uiBox.css";
 import { copyResultsToClipboard } from "@/utils/copyResultsToClipboard";
-import { getRandomSong } from "@/utils/getSong";
+import { getRandomSong } from "@/utils/getRandomSong";
 import DailyGuessLabel from "@/ui/DailyGuessLabel";
 import { DailyChallenge } from "@/data/definitions";
 import { GeoJSONFeature } from "@/data/GeoJSON";
@@ -21,8 +21,6 @@ export default function UiBox({
   audioRef,
   sourceRef,
   dailyChallengeIndexAction,
-  playedSongs,
-  playedSongsOrder,
 }: {
   dailyMode: boolean;
   resultsArray: number[];
@@ -37,8 +35,6 @@ export default function UiBox({
   audioRef: RefObject<HTMLAudioElement | null>;
   sourceRef: RefObject<HTMLSourceElement | null>;
   dailyChallengeIndexAction: Dispatch<SetStateAction<number>>;
-  playedSongs: Set<string>;
-  playedSongsOrder: string[];
 }) {
   return (
     <div className="below-map">
@@ -89,7 +85,7 @@ export default function UiBox({
               resultVisibleAction(false);
             }
           } else {
-            const newSongName = getRandomSong(playedSongs, playedSongsOrder);
+            const newSongName = getRandomSong();
             currentSongAction(newSongName);
             playSong(newSongName);
             correctPolygonAction(null);

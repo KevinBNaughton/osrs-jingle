@@ -9,7 +9,7 @@ import { songHostUrl } from "@/data/hostUrl";
 import "@/style/leaflet.css";
 import { calculateTimeDifference } from "@/utils/calculateTimeDifference";
 import getJingleNumber from "@/utils/getJingleNumber";
-import { getRandomSong } from "@/utils/getSong";
+import { getRandomSong } from "@/utils/getRandomSong";
 import { DailyChallenge } from "@/data/definitions";
 import React from "react";
 import { GeoJSONFeature } from "@/data/GeoJSON";
@@ -26,9 +26,7 @@ export default function Game({
 }: {
   dailyChallenge: DailyChallenge;
 }) {
-  let playedSongs: Set<string> = new Set();
-  let playedSongsOrder: string[] = [];
-  const initialSong = getRandomSong(playedSongs, playedSongsOrder);
+  const initialSong = getRandomSong();
   const audioRef = useRef<HTMLAudioElement>(null);
   const sourceRef = useRef<HTMLSourceElement>(null);
   const [currentSong, currentSongAction] = useState<string>(initialSong);
@@ -46,7 +44,6 @@ export default function Game({
     useState<GeoJSONFeature | null>(null);
   const [timeTaken, timeTakenAction] = useState<number>(0);
   const [startTime, startTimeAction] = useState<Date>(new Date());
-  console.debug("in Game: ", dailyChallenge);
 
   const playSong = (songName: string) => {
     const src = `${songHostUrl}/${songName.trim().replaceAll(" ", "_")}.mp3`;
@@ -81,8 +78,6 @@ export default function Game({
             audioRef={audioRef}
             sourceRef={sourceRef}
             dailyChallengeIndexAction={dailyChallengeIndexAction}
-            playedSongs={playedSongs}
-            playedSongsOrder={playedSongsOrder}
           />
           <Footer />
         </div>

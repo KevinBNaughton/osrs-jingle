@@ -1,6 +1,6 @@
-// Set in top level .env file
-// Likely set to: "http://127.0.0.1:PORT/"
-export const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+import songs from "@/data/songs.json";
+
+export const songNamesArray = Object.keys(songs);
 
 export type User = {
   id: number;
@@ -19,10 +19,4 @@ export type DailyChallenge = {
 
 export type Statistics = {
   guesses: number;
-};
-
-export type Song = {
-  name: string;
-  success_count?: number;
-  failure_count?: number;
 };

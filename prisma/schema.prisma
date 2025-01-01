@@ -26,9 +26,9 @@ model DailyChallenge {
   submissions Int?
 }
 
-model GuessCount {
-  // "OSRS_GLOBAL" is the Global Guess Count
-  song    String  @id
-  success BigInt  @default(0)
-  failure BigInt  @default(0)
+model Song {
+  // "OSRS_GLOBAL" is the global guess count
+  song          String  @id
+  success_count BigInt  @default(0)
+  failure_count BigInt  @default(0)
 }

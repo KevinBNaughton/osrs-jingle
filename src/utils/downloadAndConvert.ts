@@ -5,7 +5,7 @@ import fs from "fs";
 import path from "path";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegInstaller from "@ffmpeg-installer/ffmpeg";
-import { songNamesArray } from "@/data/db";
+import { songNamesArray } from "@/data/definitions";
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 const urls = songNamesArray.map(
