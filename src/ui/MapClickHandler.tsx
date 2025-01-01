@@ -82,7 +82,7 @@ export default function MapClickHandler({
   };
 
   const calculatePoints = (distance: number) =>
-    (1000 * 1) / Math.exp(0.0018 * distance);
+    (1000 * 1) / Math.exp(0.0016 * distance);
 
   const map = useMapEvents({
     click: async (e) => {
