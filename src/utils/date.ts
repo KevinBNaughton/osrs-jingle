@@ -5,5 +5,12 @@ export function getCurrentUTCDate(): Date {
 }
 
 export function formatDateToString(date: Date): string {
-  return `${date.getUTCFullYear()}-${date.getUTCMonth() + 1}-${date.getUTCDate()}`;
+  const dateFormatter = new Intl.DateTimeFormat("en-GB", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone: "Europe/London",
+  });
+  const [day, month, year] = dateFormatter.format(date).split("/");
+  return `${year}-${month}-${day}`;
 }

@@ -95,6 +95,7 @@ export default function Game({
           resultVisible={resultVisible}
           resultsArray={resultsArray}
           resultsArrayAction={resultsArrayAction}
+          dailyChallengeDate={dailyChallenge.date}
           dailyChallengeIndex={dailyChallengeIndex}
           dailyCompleteAction={dailyCompleteAction}
           startedGame={startedGame}
@@ -148,6 +149,7 @@ export default function Game({
                 : calculateTimeDifference(startTime, new Date())
             }
             jingleNumber={getJingleNumber(dailyChallenge)}
+            dailyChallengeDate={dailyChallenge.date}
           />
         )}
         {!dailyComplete && (

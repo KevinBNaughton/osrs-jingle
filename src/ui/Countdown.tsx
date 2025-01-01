@@ -2,13 +2,17 @@
 
 import React, { useEffect, useState } from "react";
 import "@/style/resultScreen.css";
-import { formatDateToString, getCurrentUTCDate } from "@/utils/date";
+import { formatDateToString } from "@/utils/date";
 
-export default function Countdown() {
+export default function Countdown({
+  dailyChallengeDate,
+}: {
+  dailyChallengeDate: Date;
+}) {
   const [countdown, setCountdown] = useState("");
   const dailyCompleted =
     global?.localStorage?.dailyComplete ===
-    formatDateToString(getCurrentUTCDate());
+    formatDateToString(dailyChallengeDate);
 
   useEffect(() => {
     const calculateTimeLeft = () => {

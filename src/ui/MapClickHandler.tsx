@@ -26,7 +26,7 @@ import {
 } from "@/utils/clickHandler-utils";
 import { featureMatchesSong } from "@/utils/geojson-utils";
 import { toOurPixelCoordinates } from "@/utils/coordinate-utils";
-import { formatDateToString, getCurrentUTCDate } from "@/utils/date";
+import { formatDateToString } from "@/utils/date";
 
 export default function MapClickHandler({
   correctPolygonAction,
@@ -37,6 +37,7 @@ export default function MapClickHandler({
   resultVisibleAction,
   resultsArray,
   resultsArrayAction,
+  dailyChallengeDate,
   dailyChallengeIndex,
   dailyCompleteAction,
   startedGame,
@@ -53,6 +54,7 @@ export default function MapClickHandler({
   resultVisibleAction: Dispatch<SetStateAction<boolean>>;
   resultsArrayAction: Dispatch<SetStateAction<number[]>>;
   resultsArray: number[];
+  dailyChallengeDate: Date;
   dailyChallengeIndex: number;
   dailyCompleteAction: Dispatch<SetStateAction<boolean>>;
   startedGame: boolean;
@@ -143,7 +145,7 @@ export default function MapClickHandler({
       if (resultsArray.length > 4) {
         timeTakenAction(calculateTimeDifference(startTime, new Date()));
         setTimeout(() => dailyCompleteAction(true), 1500);
-        const utc_today: string = formatDateToString(getCurrentUTCDate());
+        const utc_today: string = formatDateToString(dailyChallengeDate);
         if (
           localStorage?.dailyComplete === undefined ||
           localStorage?.dailyComplete !== utc_today

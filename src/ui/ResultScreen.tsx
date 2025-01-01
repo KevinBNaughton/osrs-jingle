@@ -12,11 +12,13 @@ export default function ResultScreen({
   percentile,
   timeTaken,
   jingleNumber,
+  dailyChallengeDate,
 }: {
   resultsArray: number[];
   percentile: number;
   timeTaken: number;
   jingleNumber: number;
+  dailyChallengeDate: Date;
 }) {
   const totalResult = resultsArray.reduce((a, b) => a + b, 0);
   return (
@@ -38,7 +40,7 @@ export default function ResultScreen({
         <div className="result-screen-data-row">
           <div style={{ alignContent: "center" }}>Next in</div>
           <div>
-            <Countdown />
+            <Countdown dailyChallengeDate={dailyChallengeDate} />
           </div>
         </div>
         <hr />

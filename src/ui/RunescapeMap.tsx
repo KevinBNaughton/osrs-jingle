@@ -15,7 +15,6 @@ import { GeoJSONFeature } from "@/data/GeoJSON";
 import MapClickHandler from "@/ui/MapClickHandler";
 import React from "react";
 import handleMapMoveEnd from "@/utils/handleMapMoveEnd";
-import dynamic from "next/dynamic";
 
 export default function RunescapeMap({
   correctPolygonAction,
@@ -26,6 +25,7 @@ export default function RunescapeMap({
   resultVisible,
   resultsArrayAction,
   resultsArray,
+  dailyChallengeDate,
   dailyChallengeIndex,
   dailyCompleteAction,
   startedGame,
@@ -42,6 +42,7 @@ export default function RunescapeMap({
   resultVisible: boolean;
   resultsArrayAction: Dispatch<SetStateAction<number[]>>;
   resultsArray: number[];
+  dailyChallengeDate: Date;
   dailyChallengeIndex: number;
   dailyCompleteAction: Dispatch<SetStateAction<boolean>>;
   startedGame: boolean;
@@ -103,6 +104,7 @@ export default function RunescapeMap({
           resultVisibleAction={resultVisibleAction}
           resultsArray={resultsArray}
           resultsArrayAction={resultsArrayAction}
+          dailyChallengeDate={dailyChallengeDate}
           dailyChallengeIndex={dailyChallengeIndex}
           dailyCompleteAction={dailyCompleteAction}
           startedGame={startedGame}

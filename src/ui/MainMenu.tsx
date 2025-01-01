@@ -6,7 +6,7 @@ import { mediaHostUrl } from "@/data/hostUrl";
 import { getStatistics } from "@/data/db";
 import "@/style/footer.css";
 import "@/style/mainMenu.css";
-import { getCurrentUTCDate, formatDateToString } from "@/utils/date";
+import { formatDateToString } from "@/utils/date";
 import Countdown from "@/ui/Countdown";
 import { DailyChallenge } from "@/data/definitions";
 
@@ -70,7 +70,7 @@ export default function MainMenu({
         onClick={() => {
           if (
             global?.localStorage?.dailyComplete ===
-            formatDateToString(getCurrentUTCDate())
+            formatDateToString(dailyChallenge.date)
           ) {
             dailyCompleteAction(true);
             resultsArrayAction(JSON.parse(localStorage.dailyResults));
@@ -89,7 +89,7 @@ export default function MainMenu({
         }}
       >
         Daily Jingle
-        <Countdown />
+        <Countdown dailyChallengeDate={dailyChallenge.date} />
         <div style={{ fontSize: "40%" }}>
           {dailyChallenge.results.length.toLocaleString()} Completions
         </div>

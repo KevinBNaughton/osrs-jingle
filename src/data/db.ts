@@ -2,7 +2,6 @@
 
 import { DailyChallenge, Statistics } from "@/data/definitions";
 import { PrismaClient, User, Song } from "@prisma/client";
-import { getCurrentUTCDate } from "@/utils/date";
 import { getRandomSong } from "@/utils/getRandomSong";
 
 const prisma: PrismaClient = new PrismaClient();
@@ -51,10 +50,7 @@ async function generateDailyChallenge(date: Date) {
   return dailyChallenge;
 }
 
-export async function getDailyChallenge(
-  _formattedDate: string,
-): Promise<DailyChallenge> {
-  const today = getCurrentUTCDate();
+export async function getDailyChallenge(today: Date): Promise<DailyChallenge> {
   let dailyChallenge = await prisma.dailyChallenge.findUnique({
     where: { date: today },
   });
